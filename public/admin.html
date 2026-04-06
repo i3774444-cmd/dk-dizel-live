@@ -56,7 +56,6 @@
         <button class="tab-btn" data-tab="about">📄 О компании</button>
       </div>
 
-      <!-- Главная -->
       <div id="tab-main" class="tab-content active">
         <div class="card">
           <h2>🏠 Главный экран</h2>
@@ -72,7 +71,6 @@
         </div>
       </div>
 
-      <!-- Услуги -->
       <div id="tab-services" class="tab-content">
         <div class="card">
           <h2>🔧 Услуги</h2>
@@ -83,7 +81,6 @@
         </div>
       </div>
 
-      <!-- Кейсы -->
       <div id="tab-cases" class="tab-content">
         <div class="card">
           <h2>🚗 Примеры работ</h2>
@@ -92,7 +89,6 @@
         </div>
       </div>
 
-      <!-- Отзывы -->
       <div id="tab-reviews" class="tab-content">
         <div class="card">
           <h2>⭐ Отзывы клиентов</h2>
@@ -101,7 +97,6 @@
         </div>
       </div>
 
-      <!-- Контакты -->
       <div id="tab-contacts" class="tab-content">
         <div class="card">
           <h2>📞 Контактная информация</h2>
@@ -111,7 +106,6 @@
         </div>
       </div>
 
-      <!-- О компании -->
       <div id="tab-about" class="tab-content">
         <div class="card">
           <h2>📄 О компании</h2>
@@ -128,10 +122,10 @@
 
   <script>
     const PASSWORD = 'DKDiesel2024';
-    const REPO = 'i3774444-cmd/DK_DIZEL';
+    const REPO = 'i3774444-cmd/DK_DIZEL_NEW';
     const BRANCH = 'main';
     const GITHUB_TOKEN = '';
-
+    
     const FILES = {
       hero: 'src/data/hero.json',
       services: 'src/data/services.json',
@@ -141,7 +135,7 @@
       contacts: 'src/data/contacts.json',
       about: 'src/data/about.json'
     };
-
+    
     let fileShas = {};
 
     function checkPassword() {
@@ -162,12 +156,11 @@
     async function fetchFile(filePath) {
       try {
         const url = `https://api.github.com/repos/${REPO}/contents/${filePath}?ref=${BRANCH}`;
-        const response = await fetch(url, {
-          headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        });
+        const headers = {};
+        if (GITHUB_TOKEN && GITHUB_TOKEN !== '') {
+          headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+        }
+        const response = await fetch(url, { headers });
         if (response.status === 404) return null;
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
@@ -187,16 +180,20 @@
         sha: fileShas[filePath],
         branch: BRANCH
       };
-
+      
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (GITHUB_TOKEN && GITHUB_TOKEN !== '') {
+        headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      }
+      
       const response = await fetch(`https://api.github.com/repos/${REPO}/contents/${filePath}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `token ${GITHUB_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify(data)
       });
-
+      
       if (!response.ok) throw new Error(await response.text());
       const result = await response.json();
       fileShas[filePath] = result.content.sha;
