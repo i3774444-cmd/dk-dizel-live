@@ -6,5 +6,10 @@
     "Оригинальное оборудование",
     "Гарантия 12 мес.",
     "Диагностика за 30 мин"
-  ]
+  ],
+  "video_placeholder": "Процесс чистки DPF",
+  "yandex_rating": "4.4 / 5.0",
+  "yandex_reviews_count": "Яндекс · 13 отзывов",
+  "partners_title": "Работаем с техникой",
+  "partners": ["MTZ", "MAZ", "BELAZ"]
 }

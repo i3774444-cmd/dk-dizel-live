@@ -41,7 +41,6 @@ const Contacts = () => {
 
       <section className="container pb-16">
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Contact info + map */}
           <div className="space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -59,8 +58,8 @@ const Contacts = () => {
               <div className="flex items-center gap-3">
                 <Clock className="h-5 w-5 text-primary shrink-0" />
                 <div>
-                  <p className="font-medium">Пн–Сб: 9:00–19:00</p>
-                  <p className="text-sm text-muted-foreground">Вс — выходной</p>
+                  <p className="font-medium">{contacts.work_hours}</p>
+                  <p className="text-sm text-muted-foreground">{contacts.work_hours_note}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -77,7 +76,6 @@ const Contacts = () => {
               </div>
             </motion.div>
 
-            {/* Route buttons */}
             <div className="grid grid-cols-2 gap-3">
               <Button variant="outline-muted" className="h-14 sm:h-12 rounded-xl text-base sm:text-sm" asChild>
                 <a href="yandexnavi://build_route_on_map?lat_to=53.9081&lon_to=27.4494" target="_blank" rel="noopener noreferrer">
@@ -93,7 +91,6 @@ const Contacts = () => {
               </Button>
             </div>
 
-            {/* Map */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -112,7 +109,6 @@ const Contacts = () => {
             </motion.div>
           </div>
 
-          {/* Form */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -178,13 +174,12 @@ const Contacts = () => {
               </div>
             </form>
 
-            {/* Requisites */}
             <div className="mt-8 pt-6 border-t border-border">
               <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-3">Реквизиты</h3>
               <div className="text-xs text-muted-foreground font-mono space-y-1">
-                <p>ИП Кравцов Д.А.</p>
-                <p>УНП: 192XXXXXXX</p>
-                <p>р/с BY00 XXXX XXXX XXXX XXXX XXXX XXXX</p>
+                <p>{contacts.requisites.company}</p>
+                <p>{contacts.requisites.unp}</p>
+                <p>{contacts.requisites.account}</p>
               </div>
             </div>
           </motion.div>

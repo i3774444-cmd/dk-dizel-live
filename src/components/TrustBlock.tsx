@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, Play, ExternalLink } from "lucide-react";
 import stats from "@/data/stats.json";
+import hero from "@/data/hero.json";
 
 const TrustBlock = () => {
   return (
@@ -18,7 +19,7 @@ const TrustBlock = () => {
             <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform">
               <Play className="h-7 w-7 text-primary-foreground ml-1" />
             </div>
-            <span className="text-sm font-medium text-muted-foreground">Процесс чистки DPF</span>
+            <span className="text-sm font-medium text-muted-foreground">{hero.video_placeholder}</span>
           </div>
         </motion.div>
 
@@ -43,17 +44,17 @@ const TrustBlock = () => {
               <Star className="h-5 w-5 text-primary fill-primary/40" />
             </div>
             <div>
-              <p className="font-mono text-lg font-bold">4.4 / 5.0</p>
-              <p className="text-xs text-muted-foreground">Яндекс · 13 отзывов</p>
+              <p className="font-mono text-lg font-bold">{hero.yandex_rating}</p>
+              <p className="text-xs text-muted-foreground">{hero.yandex_reviews_count}</p>
             </div>
             <ExternalLink className="h-4 w-4 text-muted-foreground ml-auto" />
           </a>
 
           {/* Partners */}
           <div className="glass-card rounded-2xl p-6">
-            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-4">Работаем с техникой</p>
+            <p className="text-xs text-muted-foreground font-mono uppercase tracking-wider mb-4">{hero.partners_title}</p>
             <div className="flex items-center gap-8">
-              {["MTZ", "MAZ", "BELAZ"].map((brand) => (
+              {hero.partners.map((brand) => (
                 <div key={brand} className="text-xl font-bold text-foreground/30 tracking-widest">
                   {brand}
                 </div>
