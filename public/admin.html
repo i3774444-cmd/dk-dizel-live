@@ -7,7 +7,7 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: system-ui, sans-serif; background: #f5f5f5; padding: 20px; }
-    .container { max-width: 800px; margin: 0 auto; }
+    .container { max-width: 1000px; margin: 0 auto; }
     h1 { font-size: 24px; margin-bottom: 20px; color: #333; }
     .card { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .card h2 { font-size: 18px; margin-bottom: 16px; color: #f97316; border-bottom: 2px solid #f97316; padding-bottom: 8px; }
@@ -15,6 +15,10 @@
     label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: #333; }
     input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: monospace; }
     textarea { min-height: 80px; resize: vertical; }
+    .feature-item, .process-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .feature-item input, .process-item input { flex: 1; }
+    .remove-feature, .remove-process { background: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+    .add-btn { background: #22c55e; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-top: 8px; }
     button { background: #f97316; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; }
     button:hover { background: #ea580c; }
     .status { margin-top: 16px; padding: 12px; border-radius: 8px; display: none; }
@@ -30,14 +34,13 @@
     .tab button.active { background: #f97316; color: white; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .case-item, .review-item { background: #f9f9f9; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
-    .remove-btn { background: #ef4444; margin-top: 10px; padding: 8px; }
-    .add-btn { background: #22c55e; margin-top: 10px; }
+    .service-card { background: #f9f9f9; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+    .service-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #f97316; }
   </style>
 </head>
 <body>
   <div id="loginBox" class="login-box">
-    <h1>�� Вход в админку</h1>
+    <h1>🔐 Вход в админку</h1>
     <input type="password" id="password" placeholder="Введите пароль" style="margin-top:20px">
     <button onclick="checkPassword()" style="margin-top:20px">Войти</button>
     <div id="error" class="error">Неверный пароль</div>
@@ -45,72 +48,41 @@
 
   <div id="adminPanel" style="display:none">
     <div class="container">
-      <h1>📝 Управление сайтом DK DIZEL</h1>
+      <h1>📝 Управление услугами DK DIZEL</h1>
 
       <div class="tab">
-        <button class="tab-btn active" data-tab="main">🏠 Главная</button>
-        <button class="tab-btn" data-tab="services">🔧 Услуги</button>
-        <button class="tab-btn" data-tab="cases">🚗 Кейсы</button>
-        <button class="tab-btn" data-tab="reviews">⭐ Отзывы</button>
+        <button class="tab-btn active" data-tab="services">🔧 Услуги</button>
         <button class="tab-btn" data-tab="contacts">📞 Контакты</button>
         <button class="tab-btn" data-tab="about">📄 О компании</button>
       </div>
 
-      <div id="tab-main" class="tab-content active">
-        <div class="card">
-          <h2>🏠 Главный экран</h2>
-          <div class="field"><label>Заголовок (H1)</label><input type="text" id="hero_title"></div>
-          <div class="field"><label>Подзаголовок</label><input type="text" id="hero_subtitle"></div>
-          <div class="field"><label>Гарантия</label><input type="text" id="hero_guarantee"></div>
-        </div>
-        <div class="card">
-          <h2>📊 Статистика</h2>
-          <div class="field"><label>Лет опыта</label><input type="text" id="stat_experience"></div>
-          <div class="field"><label>Клиентов</label><input type="text" id="stat_clients"></div>
-          <div class="field"><label>Результат</label><input type="text" id="stat_result"></div>
-        </div>
+      <!-- Вкладка Услуги -->
+      <div id="tab-services" class="tab-content active">
+        <div id="services-container"></div>
       </div>
 
-      <div id="tab-services" class="tab-content">
-        <div class="card">
-          <h2>🔧 Услуги</h2>
-          <div class="field"><label>Ремонт форсунок</label><input type="text" id="price_injectors"></div>
-          <div class="field"><label>Чистка DPF</label><input type="text" id="price_dpf"></div>
-          <div class="field"><label>Диагностика турбин</label><input type="text" id="price_turbo"></div>
-          <div class="field"><label>Промывка инжекторов</label><input type="text" id="price_injector_cleaning"></div>
-        </div>
-      </div>
-
-      <div id="tab-cases" class="tab-content">
-        <div class="card">
-          <h2>🚗 Примеры работ</h2>
-          <div id="cases-container"></div>
-          <button class="add-btn" onclick="addCase()">+ Добавить кейс</button>
-        </div>
-      </div>
-
-      <div id="tab-reviews" class="tab-content">
-        <div class="card">
-          <h2>⭐ Отзывы клиентов</h2>
-          <div id="reviews-container"></div>
-          <button class="add-btn" onclick="addReview()">+ Добавить отзыв</button>
-        </div>
-      </div>
-
+      <!-- Вкладка Контакты -->
       <div id="tab-contacts" class="tab-content">
         <div class="card">
           <h2>📞 Контактная информация</h2>
           <div class="field"><label>Телефон</label><input type="text" id="phone"></div>
           <div class="field"><label>Email</label><input type="email" id="email"></div>
           <div class="field"><label>Адрес</label><input type="text" id="address"></div>
+          <div class="field"><label>График работы</label><input type="text" id="work_hours"></div>
+          <div class="field"><label>Примечание к графику</label><input type="text" id="work_hours_note"></div>
+          <h3>Реквизиты</h3>
+          <div class="field"><label>Компания</label><input type="text" id="requisites_company"></div>
+          <div class="field"><label>УНП</label><input type="text" id="requisites_unp"></div>
+          <div class="field"><label>Расчётный счёт</label><input type="text" id="requisites_account"></div>
         </div>
       </div>
 
+      <!-- Вкладка О компании -->
       <div id="tab-about" class="tab-content">
         <div class="card">
-          <h2>📄 О компании</h2>
+          <h2>�� О компании</h2>
           <div class="field"><label>Текст о компании</label><textarea id="about_text" rows="6"></textarea></div>
-          <div class="field"><label>Оборудование (список через запятую)</label><input type="text" id="about_equipment" placeholder="Bosch EPS-815, Hartridge CRi-PC"></div>
+          <div class="field"><label>Оборудование</label><input type="text" id="about_equipment"></div>
         </div>
       </div>
 
@@ -127,16 +99,13 @@
     const GITHUB_TOKEN = '';
     
     const FILES = {
-      hero: 'src/data/hero.json',
       services: 'src/data/services.json',
-      stats: 'src/data/stats.json',
-      cases: 'src/data/cases.json',
-      reviews: 'src/data/reviews.json',
       contacts: 'src/data/contacts.json',
       about: 'src/data/about.json'
     };
     
     let fileShas = {};
+    let servicesData = [];
 
     function checkPassword() {
       const password = document.getElementById('password').value;
@@ -200,128 +169,170 @@
       return result;
     }
 
+    function renderServices() {
+      const container = document.getElementById('services-container');
+      container.innerHTML = '';
+      servicesData.forEach((service, idx) => {
+        container.innerHTML += `
+          <div class="service-card" data-idx="${idx}">
+            <div class="service-title">${service.title}</div>
+            <div class="field"><label>Название</label><input type="text" class="service-title-input" data-idx="${idx}" value="${escapeHtml(service.title)}"></div>
+            <div class="field"><label>Подзаголовок</label><input type="text" class="service-subtitle" data-idx="${idx}" value="${escapeHtml(service.subtitle)}"></div>
+            <div class="field"><label>Краткое описание (карточка)</label><textarea class="service-desc" data-idx="${idx}">${escapeHtml(service.desc)}</textarea></div>
+            <div class="field"><label>Цена</label><input type="text" class="service-price" data-idx="${idx}" value="${escapeHtml(service.price)}"></div>
+            <div class="field"><label>Полное описание (детальная страница)</label><textarea class="service-heroDesc" data-idx="${idx}">${escapeHtml(service.heroDescription || service.desc)}</textarea></div>
+            
+            <h3>Что включено (features)</h3>
+            <div class="features-container" data-idx="${idx}"></div>
+            <button class="add-feature" data-idx="${idx}">+ Добавить пункт</button>
+            
+            <h3>Этапы работ (process)</h3>
+            <div class="process-container" data-idx="${idx}"></div>
+            <button class="add-process" data-idx="${idx}">+ Добавить этап</button>
+          </div>
+        `;
+      });
+      
+      // Заполняем features и process для каждой услуги
+      servicesData.forEach((service, idx) => {
+        const featuresContainer = document.querySelector(`.features-container[data-idx="${idx}"]`);
+        const processContainer = document.querySelector(`.process-container[data-idx="${idx}"]`);
+        
+        if (service.features) {
+          service.features.forEach((feature, fIdx) => {
+            featuresContainer.innerHTML += `
+              <div class="feature-item">
+                <input type="text" class="feature-input" data-service-idx="${idx}" data-feature-idx="${fIdx}" value="${escapeHtml(feature)}">
+                <button class="remove-feature" data-service-idx="${idx}" data-feature-idx="${fIdx}">✖</button>
+              </div>
+            `;
+          });
+        }
+        
+        if (service.process) {
+          service.process.forEach((step, pIdx) => {
+            processContainer.innerHTML += `
+              <div class="process-item">
+                <input type="text" class="process-input" data-service-idx="${idx}" data-process-idx="${pIdx}" value="${escapeHtml(step.step)}">
+                <button class="remove-process" data-service-idx="${idx}" data-process-idx="${pIdx}">✖</button>
+              </div>
+            `;
+          });
+        }
+      });
+      
+      attachServiceEvents();
+    }
+
+    function attachServiceEvents() {
+      // Изменение полей услуги
+      document.querySelectorAll('.service-title-input').forEach(el => {
+        el.addEventListener('change', (e) => servicesData[e.target.dataset.idx].title = e.target.value);
+      });
+      document.querySelectorAll('.service-subtitle').forEach(el => {
+        el.addEventListener('change', (e) => servicesData[e.target.dataset.idx].subtitle = e.target.value);
+      });
+      document.querySelectorAll('.service-desc').forEach(el => {
+        el.addEventListener('change', (e) => servicesData[e.target.dataset.idx].desc = e.target.value);
+      });
+      document.querySelectorAll('.service-price').forEach(el => {
+        el.addEventListener('change', (e) => servicesData[e.target.dataset.idx].price = e.target.value);
+      });
+      document.querySelectorAll('.service-heroDesc').forEach(el => {
+        el.addEventListener('change', (e) => servicesData[e.target.dataset.idx].heroDescription = e.target.value);
+      });
+      
+      // Добавление feature
+      document.querySelectorAll('.add-feature').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          if (!servicesData[idx].features) servicesData[idx].features = [];
+          servicesData[idx].features.push('Новый пункт');
+          renderServices();
+        });
+      });
+      
+      // Добавление process
+      document.querySelectorAll('.add-process').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.dataset.idx);
+          if (!servicesData[idx].process) servicesData[idx].process = [];
+          servicesData[idx].process.push({ step: 'Новый этап' });
+          renderServices();
+        });
+      });
+      
+      // Удаление feature
+      document.querySelectorAll('.remove-feature').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const serviceIdx = parseInt(e.target.dataset.serviceIdx);
+          const featureIdx = parseInt(e.target.dataset.featureIdx);
+          servicesData[serviceIdx].features.splice(featureIdx, 1);
+          renderServices();
+        });
+      });
+      
+      // Удаление process
+      document.querySelectorAll('.remove-process').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const serviceIdx = parseInt(e.target.dataset.serviceIdx);
+          const processIdx = parseInt(e.target.dataset.processIdx);
+          servicesData[serviceIdx].process.splice(processIdx, 1);
+          renderServices();
+        });
+      });
+      
+      // Изменение feature
+      document.querySelectorAll('.feature-input').forEach(el => {
+        el.addEventListener('change', (e) => {
+          const serviceIdx = parseInt(e.target.dataset.serviceIdx);
+          const featureIdx = parseInt(e.target.dataset.featureIdx);
+          servicesData[serviceIdx].features[featureIdx] = e.target.value;
+        });
+      });
+      
+      // Изменение process
+      document.querySelectorAll('.process-input').forEach(el => {
+        el.addEventListener('change', (e) => {
+          const serviceIdx = parseInt(e.target.dataset.serviceIdx);
+          const processIdx = parseInt(e.target.dataset.processIdx);
+          servicesData[serviceIdx].process[processIdx].step = e.target.value;
+        });
+      });
+    }
+
     async function loadAllData() {
       try {
-        const hero = await fetchFile(FILES.hero);
-        if (hero) {
-          document.getElementById('hero_title').value = hero.title || '';
-          document.getElementById('hero_subtitle').value = hero.subtitle || '';
-          document.getElementById('hero_guarantee').value = hero.guarantee || '';
-        }
-
-        const stats = await fetchFile(FILES.stats);
-        if (stats && stats.length >= 3) {
-          document.getElementById('stat_experience').value = stats[0].value || '';
-          document.getElementById('stat_clients').value = stats[1].value || '';
-          document.getElementById('stat_result').value = stats[2].value || '';
-        }
-
         const services = await fetchFile(FILES.services);
-        if (services && services.length >= 4) {
-          document.getElementById('price_injectors').value = services[0].price || '';
-          document.getElementById('price_dpf').value = services[1].price || '';
-          document.getElementById('price_turbo').value = services[2].price || '';
-          document.getElementById('price_injector_cleaning').value = services[3].price || '';
+        if (services) {
+          servicesData = services;
+          renderServices();
         }
-
-        const cases = await fetchFile(FILES.cases);
-        if (cases) {
-          casesData = cases;
-          renderCases();
-        }
-
-        const reviews = await fetchFile(FILES.reviews);
-        if (reviews) {
-          reviewsData = reviews;
-          renderReviews();
-        }
-
+        
         const contacts = await fetchFile(FILES.contacts);
         if (contacts) {
           document.getElementById('phone').value = contacts.phone || '';
           document.getElementById('email').value = contacts.email || '';
           document.getElementById('address').value = contacts.address || '';
+          document.getElementById('work_hours').value = contacts.work_hours || '';
+          document.getElementById('work_hours_note').value = contacts.work_hours_note || '';
+          if (contacts.requisites) {
+            document.getElementById('requisites_company').value = contacts.requisites.company || '';
+            document.getElementById('requisites_unp').value = contacts.requisites.unp || '';
+            document.getElementById('requisites_account').value = contacts.requisites.account || '';
+          }
         }
-
+        
         const about = await fetchFile(FILES.about);
         if (about) {
           document.getElementById('about_text').value = about.text || '';
           document.getElementById('about_equipment').value = about.equipment || '';
         }
-
+        
         showStatus('✅ Данные загружены', 'success');
       } catch (error) {
         showStatus('❌ Ошибка загрузки: ' + error.message, 'error');
       }
-    }
-
-    let casesData = [];
-    let reviewsData = [];
-
-    function renderCases() {
-      const container = document.getElementById('cases-container');
-      container.innerHTML = '';
-      casesData.forEach((c, i) => {
-        container.innerHTML += `
-          <div class="case-item">
-            <div class="field"><label>Название</label><input type="text" class="case-title" data-idx="${i}" value="${escapeHtml(c.title)}"></div>
-            <div class="field"><label>Автомобиль</label><input type="text" class="case-vehicle" data-idx="${i}" value="${escapeHtml(c.vehicle)}"></div>
-            <div class="field"><label>Проблема</label><textarea class="case-problem" data-idx="${i}">${escapeHtml(c.problem)}</textarea></div>
-            <div class="field"><label>Решение</label><textarea class="case-solution" data-idx="${i}">${escapeHtml(c.solution)}</textarea></div>
-            <div class="field"><label>Результат</label><textarea class="case-result" data-idx="${i}">${escapeHtml(c.result)}</textarea></div>
-            <div class="field"><label>Цена</label><input type="text" class="case-price" data-idx="${i}" value="${escapeHtml(c.price)}"></div>
-            <div class="field"><label>Срок</label><input type="text" class="case-duration" data-idx="${i}" value="${escapeHtml(c.duration)}"></div>
-            <button class="remove-btn" onclick="removeCase(${i})">Удалить</button>
-          </div>
-        `;
-      });
-      attachCaseEvents();
-    }
-
-    function attachCaseEvents() {
-      document.querySelectorAll('.case-title').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].title = e.target.value));
-      document.querySelectorAll('.case-vehicle').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].vehicle = e.target.value));
-      document.querySelectorAll('.case-problem').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].problem = e.target.value));
-      document.querySelectorAll('.case-solution').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].solution = e.target.value));
-      document.querySelectorAll('.case-result').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].result = e.target.value));
-      document.querySelectorAll('.case-price').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].price = e.target.value));
-      document.querySelectorAll('.case-duration').forEach(el => el.addEventListener('change', (e) => casesData[e.target.dataset.idx].duration = e.target.value));
-    }
-
-    function renderReviews() {
-      const container = document.getElementById('reviews-container');
-      container.innerHTML = '';
-      reviewsData.forEach((r, i) => {
-        container.innerHTML += `
-          <div class="review-item">
-            <div class="field"><label>Имя</label><input type="text" class="review-name" data-idx="${i}" value="${escapeHtml(r.name)}"></div>
-            <div class="field"><label>Отзыв</label><textarea class="review-text" data-idx="${i}">${escapeHtml(r.text)}</textarea></div>
-            <button class="remove-btn" onclick="removeReview(${i})">Удалить</button>
-          </div>
-        `;
-      });
-      document.querySelectorAll('.review-name').forEach(el => el.addEventListener('change', (e) => reviewsData[e.target.dataset.idx].name = e.target.value));
-      document.querySelectorAll('.review-text').forEach(el => el.addEventListener('change', (e) => reviewsData[e.target.dataset.idx].text = e.target.value));
-    }
-
-    function addCase() {
-      casesData.push({ title: "Новый кейс", vehicle: "Марка модель", problem: "Описание проблемы", solution: "Что сделали", result: "Результат", price: "от 0 BYN", duration: "1 день" });
-      renderCases();
-    }
-
-    function removeCase(idx) {
-      casesData.splice(idx, 1);
-      renderCases();
-    }
-
-    function addReview() {
-      reviewsData.push({ name: "Имя клиента", text: "Текст отзыва..." });
-      renderReviews();
-    }
-
-    function removeReview(idx) {
-      reviewsData.splice(idx, 1);
-      renderReviews();
     }
 
     function escapeHtml(str) {
@@ -347,42 +358,28 @@
       const saveBtn = document.getElementById('saveBtn');
       saveBtn.classList.add('loading');
       saveBtn.textContent = '⏳ Сохранение...';
-
+      
       try {
-        await saveFile(FILES.hero, {
-          title: document.getElementById('hero_title').value,
-          subtitle: document.getElementById('hero_subtitle').value,
-          guarantee: document.getElementById('hero_guarantee').value,
-          badges: ["Оригинальное оборудование", "Гарантия 12 мес.", "Диагностика за 30 мин"]
-        });
-
-        await saveFile(FILES.stats, [
-          { value: document.getElementById('stat_experience').value, label: "лет опыта" },
-          { value: document.getElementById('stat_clients').value, label: "клиентов" },
-          { value: document.getElementById('stat_result').value, label: "результат" }
-        ]);
-
-        await saveFile(FILES.services, [
-          { title: "Ремонт форсунок", subtitle: "Common Rail", desc: "Восстановление и калибровка дизельных форсунок на стенде Bosch EPS-815", price: document.getElementById('price_injectors').value, slug: "injectors", icon: "Crosshair" },
-          { title: "Чистка DPF", subtitle: "Сажевые фильтры", desc: "Термическая и химическая очистка DPF/FAP фильтров до заводских параметров", price: document.getElementById('price_dpf').value, slug: "dpf", icon: "Wind" },
-          { title: "Диагностика турбин", subtitle: "Актуаторы & Геометрия", desc: "Компьютерная диагностика и ремонт турбокомпрессоров", price: document.getElementById('price_turbo').value, slug: "turbo", icon: "Gauge" },
-          { title: "Промывка инжекторов", subtitle: "Ультразвуковая", desc: "Глубокая промывка инжекторной системы с проверкой распыла", price: document.getElementById('price_injector_cleaning').value, slug: "injector-cleaning", icon: "Droplets" }
-        ]);
-
-        await saveFile(FILES.cases, casesData);
-        await saveFile(FILES.reviews, reviewsData);
-
+        await saveFile(FILES.services, servicesData);
+        
         await saveFile(FILES.contacts, {
           phone: document.getElementById('phone').value,
           email: document.getElementById('email').value,
-          address: document.getElementById('address').value
+          address: document.getElementById('address').value,
+          work_hours: document.getElementById('work_hours').value,
+          work_hours_note: document.getElementById('work_hours_note').value,
+          requisites: {
+            company: document.getElementById('requisites_company').value,
+            unp: document.getElementById('requisites_unp').value,
+            account: document.getElementById('requisites_account').value
+          }
         });
-
+        
         await saveFile(FILES.about, {
           text: document.getElementById('about_text').value,
           equipment: document.getElementById('about_equipment').value
         });
-
+        
         showStatus('✅ Все изменения сохранены! Сайт обновится через 1-2 минуты', 'success');
       } catch (error) {
         showStatus('❌ Ошибка: ' + error.message, 'error');
